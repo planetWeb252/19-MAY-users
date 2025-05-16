@@ -17,6 +17,16 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    public User getUserById(long id){
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if(optionalUser.isPresent()){
+            return optionalUser.get();
+        }else{
+            throw new UserNotFoundException("The user was not found");
+        }
+    }
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
