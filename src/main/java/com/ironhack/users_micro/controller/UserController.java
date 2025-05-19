@@ -45,8 +45,8 @@ public class UserController {
         try {
             User updatedUser = userService.patchAccountId(userId, userPatchAccountDTO.getAccountID());
             return new ResponseEntity<>(updatedUser, HttpStatus.ACCEPTED);
-        } catch (UserNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (UserNotFoundException exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 }

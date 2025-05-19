@@ -3,6 +3,7 @@ package com.ironhack.users_micro.service;
 import com.ironhack.users_micro.exception.UserNotFoundException;
 import com.ironhack.users_micro.model.User;
 import com.ironhack.users_micro.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +43,7 @@ public class UserService {
             foundUser = optionalUser.get();
 
             foundUser.setAccountID(accountId);
-
+            userRepository.save(foundUser);
             return  foundUser;
 
         }else{
