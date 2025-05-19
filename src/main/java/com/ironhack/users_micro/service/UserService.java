@@ -1,11 +1,14 @@
 package com.ironhack.users_micro.service;
 
+import com.ironhack.users_micro.dto.AccountDTO;
+import com.ironhack.users_micro.dto.UserResponseDTO;
 import com.ironhack.users_micro.exception.UserNotFoundException;
 import com.ironhack.users_micro.model.User;
 import com.ironhack.users_micro.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,16 +16,21 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final RestTemplate restTemplate;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, RestTemplate restTemplate) {
         this.userRepository = userRepository;
+        this.restTemplate = restTemplate;
     }
 
-    public User getUserById(long id){
+    public ResponseEntity<?> getUserById(long id){
         Optional<User> optionalUser = userRepository.findById(id);
 
         if(optionalUser.isPresent()){
-            return optionalUser.get();
+            //return optionalUser.get();
+            AccountDTO accountDTO = restTemplate.getForObject("http://accounts-micro/api/account/" + optionalUser.get().getAccountID(), AccountDTO.class);
+            UserResponseDTO response= new UserResponseDTO(optionalUser.get(), accountDTO);
+            return ResponseEntity.ok(response);
         }else{
             throw new UserNotFoundException("The user was not found");
         }
